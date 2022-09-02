@@ -32,7 +32,7 @@ public class SimpleTemplate {
             while (m.find()) {
                 String tag = m.group(1).toUpperCase();
                 if (!placeHolders.containsKey(tag)) {
-                    throw new IOException("Missing value for template variable: " + tag);
+                    throw new MissingVariable(tag);
                 }
                 found = true;
                 m.appendReplacement(sb, Matcher.quoteReplacement(placeHolders.get(tag)));
@@ -60,8 +60,16 @@ public class SimpleTemplate {
                 writer.write(replace(line));
                 writer.newLine();
             }
+        } catch (MissingVariable e) {
+            System.err.println(inFile + ": " + e.getMessage());
         } catch (IOException e) {
             throw new IOException(inFile + ": " + e.getMessage());
+        }
+    }
+
+    private static class MissingVariable extends IOException {
+        MissingVariable(String variable) {
+            super("Missing value for template variable: " + variable);
         }
     }
 }
