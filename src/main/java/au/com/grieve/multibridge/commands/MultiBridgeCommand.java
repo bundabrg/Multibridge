@@ -3,6 +3,13 @@ package au.com.grieve.multibridge.commands;
 import au.com.grieve.multibridge.MultiBridge;
 import au.com.grieve.multibridge.objects.Instance;
 import au.com.grieve.multibridge.objects.Template;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.plugin.Command;
+import net.md_5.bungee.api.plugin.TabExecutor;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -12,12 +19,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.plugin.Command;
-import net.md_5.bungee.api.plugin.TabExecutor;
 
 public class MultiBridgeCommand extends Command implements TabExecutor {
   private final MultiBridge plugin;
@@ -1646,7 +1647,9 @@ public class MultiBridgeCommand extends Command implements TabExecutor {
                         .create()));
   }
 
-  /** List Global Tags */
+  /**
+   * Reload Config
+   */
   private void reload(CommandSender sender, Arguments arguments) {
     if (arguments.args.size() > 0 && arguments.args.get(0).equalsIgnoreCase("help")) {
       sender.sendMessage(

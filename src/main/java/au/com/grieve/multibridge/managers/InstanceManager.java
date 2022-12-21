@@ -4,6 +4,10 @@ import au.com.grieve.multibridge.MultiBridge;
 import au.com.grieve.multibridge.interfaces.InstanceBuilder;
 import au.com.grieve.multibridge.objects.Instance;
 import au.com.grieve.multibridge.objects.Template;
+import net.md_5.bungee.config.Configuration;
+import net.md_5.bungee.config.ConfigurationProvider;
+import net.md_5.bungee.config.YamlConfiguration;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,9 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
-import net.md_5.bungee.config.Configuration;
-import net.md_5.bungee.config.ConfigurationProvider;
-import net.md_5.bungee.config.YamlConfiguration;
 
 public class InstanceManager {
   private final MultiBridge plugin;
@@ -52,7 +53,9 @@ public class InstanceManager {
     return path.isAbsolute() ? path : Paths.get(plugin.getDataFolder().toString(), path.toString());
   }
 
-  /** Load all instances */
+  /**
+   * Load all instances, preserving running ones
+   */
   private void loadInstances() {
     Map<String, Instance> old = instances;
     instances = new HashMap<>();
@@ -84,15 +87,16 @@ public class InstanceManager {
                   }
                   //                            }
                 } else {
-                  instances.put(name, old.get(name));
-                  old.remove(name);
+                  Instance oldInstance = old.remove(name);
+                  oldInstance.reloadConfig();
+                  instances.put(name, oldInstance);
                 }
               });
     } catch (IOException e) {
       e.printStackTrace();
     }
 
-    // Stop and Unregister Old Instances
+    // Stop and Unregister Old Instances that no longer exist
     plugin
         .getProxy()
         .getScheduler()
